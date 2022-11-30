@@ -25,7 +25,7 @@ export const Appbar: React.FC = () => {
             {pathName === "/growbank" ? (
               <Grid item xs={2} textAlign="center">
                 <IconButton>
-                  <LogoutIcon />
+                  <LogoutIcon sx={{ color: "white" }} />
                 </IconButton>
               </Grid>
             ) : null}

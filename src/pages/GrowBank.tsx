@@ -14,36 +14,34 @@ import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import React, { useState } from "react";
 import { Appbar } from "../components/Appbar";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
-import { saque } from "../store/modules/CarteiraSlice";
+import { deposito, saque } from "../store/modules/CarteiraSlice";
+
+type Actions = "pix" | "saque" | "deposito" | "";
 
 const GrowBank: React.FC = () => {
-  let teste: number = 50;
   const dispatch = useAppDispatch();
   const saldoRedux = useAppSelector((state) => state.carteira);
-  const [selectedAction, setSelectedAction] = useState<
-    "pix" | "saque" | "deposito" | ""
-  >("");
+  const [selectedAction, setSelectedAction] = useState<Actions>("");
   const [pix, setPix] = useState<string>("");
   const [destination, setDestination] = useState<string>("");
-  const [retire, setRetire] = useState<string>("");
+  const [withdraw, setWithdraw] = useState<string>("");
   const [deposit, setDeposit] = useState<string>("");
 
-  const handlePix = () => {
-    setSelectedAction("pix");
+  const handleSelect = (action: Actions) => {
+    setSelectedAction(action);
   };
 
-  const handleRetire = () => {
-    setSelectedAction("saque");
+  const handleWithdraw = () => {
+    let changeWithdraw = Number(withdraw);
+    dispatch(saque(changeWithdraw));
+    setWithdraw("");
   };
 
   const handleDeposit = () => {
-    setSelectedAction("deposito");
+    let changeDeposit = Number(deposit);
+    dispatch(deposito(changeDeposit));
+    setDeposit("");
   };
-
-  // const saque = () => {
-  //   let changeNumber = Number(retire);
-  //   dispatch(saque(teste));
-  // };
 
   return (
     <React.Fragment>
@@ -57,7 +55,7 @@ const GrowBank: React.FC = () => {
           minHeight: "86vh",
         }}
       >
-        <Grid item xs={3}>
+        <Grid item xs={4}>
           <Paper sx={{ padding: "30px" }}>
             <Typography
               variant="h5"
@@ -77,23 +75,23 @@ const GrowBank: React.FC = () => {
               }}
             >
               <Tooltip title="Pix">
-                <IconButton onClick={handlePix}>
-                  <PixIcon sx={{ fontSize: "40px" }} />
+                <IconButton onClick={() => handleSelect("pix")}>
+                  <PixIcon sx={{ fontSize: "40px", color: "secondary.main" }} />
                 </IconButton>
               </Tooltip>
               <Tooltip title="Depósito">
                 <IconButton>
                   <SavingsIcon
-                    onClick={handleRetire}
-                    sx={{ fontSize: "40px" }}
+                    onClick={() => handleSelect("deposito")}
+                    sx={{ fontSize: "40px", color: "secondary.main" }}
                   />
                 </IconButton>
               </Tooltip>
               <Tooltip title="Saque">
                 <IconButton>
                   <AttachMoneyIcon
-                    onClick={handleDeposit}
-                    sx={{ fontSize: "40px" }}
+                    onClick={() => handleSelect("saque")}
+                    sx={{ fontSize: "40px", color: "secondary.main" }}
                   />
                 </IconButton>
               </Tooltip>
@@ -138,11 +136,13 @@ const GrowBank: React.FC = () => {
                     variant="outlined"
                     fullWidth
                     sx={{ my: "20px" }}
-                    value={retire}
-                    onChange={(ev) => Number(setRetire(ev.target.value))}
+                    value={withdraw}
+                    onChange={(ev) => setWithdraw(ev.target.value)}
                   />
 
-                  <Button variant="contained">Sacar</Button>
+                  <Button variant="contained" onClick={handleWithdraw}>
+                    Sacar
+                  </Button>
                 </>
               ) : null}
               {selectedAction === "deposito" ? (
@@ -157,7 +157,9 @@ const GrowBank: React.FC = () => {
                     onChange={(ev) => setDeposit(ev.target.value)}
                   />
 
-                  <Button variant="contained">Depósito</Button>
+                  <Button variant="contained" onClick={handleDeposit}>
+                    Depósito
+                  </Button>
                 </>
               ) : null}
             </Box>
