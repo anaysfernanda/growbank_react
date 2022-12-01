@@ -20,7 +20,13 @@ import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import React, { useState } from "react";
 import { Appbar } from "../components/Appbar";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
-import { deposito2, pix2, saque2 } from "../store/modules/CarteiraSlice";
+import {
+  deleteT,
+  deposito2,
+  pix2,
+  saque2,
+} from "../store/modules/CarteiraSlice";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 type Actions = "pix" | "saque" | "deposito" | "";
 
@@ -65,6 +71,18 @@ const GrowBank: React.FC = () => {
     );
     setPix("");
     setDestination("");
+  };
+
+  const handleDelete = () => {
+    dispatch(
+      deleteT({
+        id: 0,
+        valor: 0,
+        data: "",
+        destinatario: "",
+        type: "",
+      })
+    );
   };
 
   return (
@@ -199,6 +217,7 @@ const GrowBank: React.FC = () => {
                     <TableCell align="right">Data</TableCell>
                     <TableCell align="right">Valor</TableCell>
                     <TableCell align="right">Destinatário</TableCell>
+                    <TableCell align="right">Ação</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -214,6 +233,11 @@ const GrowBank: React.FC = () => {
                       <TableCell align="right">{row.data}</TableCell>
                       <TableCell align="right">R$ {row.valor}</TableCell>
                       <TableCell align="right">{row.destinatario}</TableCell>
+                      <TableCell align="right">
+                        <IconButton onClick={() => handleDelete()}>
+                          <DeleteIcon />
+                        </IconButton>
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>

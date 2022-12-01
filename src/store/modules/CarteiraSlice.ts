@@ -43,9 +43,18 @@ const CarteiraSlice2 = createSlice({
         type: "Pix",
       });
     },
+    deleteT(state, action: PayloadAction<TransactionType>) {
+      const index = state.transactions.findIndex(
+        (item) => item.id === action.payload.id
+      );
+      if (index >= 0) {
+        state.transactions.splice(index, 1);
+      }
+      return state;
+    },
   },
 });
 
-export const { deposito2, saque2, pix2 } = CarteiraSlice2.actions;
+export const { deposito2, saque2, pix2, deleteT } = CarteiraSlice2.actions;
 
 export default CarteiraSlice2.reducer;
