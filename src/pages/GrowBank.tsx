@@ -4,6 +4,12 @@ import {
   Grid,
   IconButton,
   Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
   TextField,
   Tooltip,
   Typography,
@@ -14,13 +20,16 @@ import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import React, { useState } from "react";
 import { Appbar } from "../components/Appbar";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
-import { deposito, saque } from "../store/modules/CarteiraSlice";
+import { deposito2, pix2, saque2 } from "../store/modules/CarteiraSlice";
 
 type Actions = "pix" | "saque" | "deposito" | "";
 
 const GrowBank: React.FC = () => {
   const dispatch = useAppDispatch();
-  const saldoRedux = useAppSelector((state) => state.carteira);
+  const depositoRedux = useAppSelector((state) => state.carteira2.deposito);
+  const saldoRedux = useAppSelector((state) => state.carteira2.saldo);
+  const saqueRedux = useAppSelector((state) => state.carteira2.saque);
+  const pixRedux = useAppSelector((state) => state.carteira2.pix);
   const [selectedAction, setSelectedAction] = useState<Actions>("");
   const [pix, setPix] = useState<string>("");
   const [destination, setDestination] = useState<string>("");
@@ -33,14 +42,23 @@ const GrowBank: React.FC = () => {
 
   const handleWithdraw = () => {
     let changeWithdraw = Number(withdraw);
-    dispatch(saque(changeWithdraw));
+    dispatch(saque2(changeWithdraw));
     setWithdraw("");
   };
 
   const handleDeposit = () => {
     let changeDeposit = Number(deposit);
-    dispatch(deposito(changeDeposit));
+    dispatch(deposito2(changeDeposit));
     setDeposit("");
+  };
+
+  const handlePix = () => {
+    let changeDeposit = Number(pix);
+    dispatch(
+      pix2({ id: 0, valor: changeDeposit, data: "", destinatario: destination })
+    );
+    setPix("");
+    setDestination("");
   };
 
   return (
@@ -55,14 +73,14 @@ const GrowBank: React.FC = () => {
           minHeight: "86vh",
         }}
       >
-        <Grid item xs={4}>
+        <Grid item xs={5}>
           <Paper sx={{ padding: "30px" }}>
             <Typography
               variant="h5"
               sx={{ textAlign: "center", marginBottom: "30px" }}
             >
               Saldo atual:{" "}
-              {saldoRedux.saldo.toLocaleString("pt-BR", {
+              {saldoRedux.toLocaleString("pt-BR", {
                 style: "currency",
                 currency: "BRL",
               })}
@@ -125,7 +143,9 @@ const GrowBank: React.FC = () => {
                     value={destination}
                     onChange={(ev) => setDestination(ev.target.value)}
                   />
-                  <Button variant="contained">Enviar</Button>
+                  <Button variant="contained" onClick={handlePix}>
+                    Enviar
+                  </Button>
                 </>
               ) : null}
               {selectedAction === "saque" ? (
@@ -163,6 +183,64 @@ const GrowBank: React.FC = () => {
                 </>
               ) : null}
             </Box>
+
+            <TableContainer component={Paper}>
+              <Table sx={{ minWidth: 450 }} aria-label="simple table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Transaçâo</TableCell>
+                    <TableCell align="right">ID</TableCell>
+                    <TableCell align="right">Data</TableCell>
+                    <TableCell align="right">Valor</TableCell>
+                    <TableCell align="right">Destinatário</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {depositoRedux.map((row) => (
+                    <TableRow
+                      key={row.id}
+                      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                    >
+                      <TableCell component="th" scope="row">
+                        Depósito
+                      </TableCell>
+                      <TableCell align="right">{row.id}</TableCell>
+                      <TableCell align="right">{row.data}</TableCell>
+                      <TableCell align="right">R$ {row.valor}</TableCell>
+                      <TableCell align="right">-</TableCell>
+                    </TableRow>
+                  ))}
+                  {saqueRedux.map((row) => (
+                    <TableRow
+                      key={row.id}
+                      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                    >
+                      <TableCell component="th" scope="row">
+                        Saque
+                      </TableCell>
+                      <TableCell align="right">{row.id}</TableCell>
+                      <TableCell align="right">{row.data}</TableCell>
+                      <TableCell align="right">R$ {row.valor}</TableCell>
+                      <TableCell align="right">-</TableCell>
+                    </TableRow>
+                  ))}
+                  {pixRedux.map((row) => (
+                    <TableRow
+                      key={row.id}
+                      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                    >
+                      <TableCell component="th" scope="row">
+                        Pix
+                      </TableCell>
+                      <TableCell align="right">{row.id}</TableCell>
+                      <TableCell align="right">{row.data}</TableCell>
+                      <TableCell align="right">R$ {row.valor}</TableCell>
+                      <TableCell align="right">{row.destinatario}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
           </Paper>
         </Grid>
       </Grid>

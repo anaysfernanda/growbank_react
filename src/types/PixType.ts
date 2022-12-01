@@ -1,7 +1,7 @@
 interface PixType {
   id: number;
   valor: number;
-  data: number;
+  data: string;
   destinatario: string;
 }
 

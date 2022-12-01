@@ -1,7 +1,7 @@
 interface InputType {
   id: number;
   valor: number;
-  data: number;
+  data: string;
 }
 
 export default InputType;

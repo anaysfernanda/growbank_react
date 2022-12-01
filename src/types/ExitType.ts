@@ -1,7 +1,7 @@
 interface ExitType {
   id: number;
   valor: number;
-  data: number;
+  data: string;
 }
 
 export default ExitType;
