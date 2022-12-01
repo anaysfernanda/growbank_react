@@ -1,12 +1,11 @@
 import InputType from "./InputType";
 import PixType from "./PixType";
 import ExitType from "./ExitType";
+import { TransactionType } from "./TransactionType";
 
 interface UserType {
   saldo: number;
-  saque: ExitType[];
-  deposito: InputType[];
-  pix: PixType[];
+  transactions: TransactionType[];
 }
 
 export default UserType;

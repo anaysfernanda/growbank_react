@@ -26,10 +26,10 @@ type Actions = "pix" | "saque" | "deposito" | "";
 
 const GrowBank: React.FC = () => {
   const dispatch = useAppDispatch();
-  const depositoRedux = useAppSelector((state) => state.carteira2.deposito);
+  const transactionsRedux = useAppSelector(
+    (state) => state.carteira2.transactions
+  );
   const saldoRedux = useAppSelector((state) => state.carteira2.saldo);
-  const saqueRedux = useAppSelector((state) => state.carteira2.saque);
-  const pixRedux = useAppSelector((state) => state.carteira2.pix);
   const [selectedAction, setSelectedAction] = useState<Actions>("");
   const [pix, setPix] = useState<string>("");
   const [destination, setDestination] = useState<string>("");
@@ -55,7 +55,13 @@ const GrowBank: React.FC = () => {
   const handlePix = () => {
     let changeDeposit = Number(pix);
     dispatch(
-      pix2({ id: 0, valor: changeDeposit, data: "", destinatario: destination })
+      pix2({
+        id: 0,
+        valor: changeDeposit,
+        data: "",
+        destinatario: destination,
+        type: "Pix",
+      })
     );
     setPix("");
     setDestination("");
@@ -196,41 +202,13 @@ const GrowBank: React.FC = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {depositoRedux.map((row) => (
+                  {transactionsRedux.map((row) => (
                     <TableRow
                       key={row.id}
                       sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                     >
                       <TableCell component="th" scope="row">
-                        Depósito
-                      </TableCell>
-                      <TableCell align="right">{row.id}</TableCell>
-                      <TableCell align="right">{row.data}</TableCell>
-                      <TableCell align="right">R$ {row.valor}</TableCell>
-                      <TableCell align="right">-</TableCell>
-                    </TableRow>
-                  ))}
-                  {saqueRedux.map((row) => (
-                    <TableRow
-                      key={row.id}
-                      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                    >
-                      <TableCell component="th" scope="row">
-                        Saque
-                      </TableCell>
-                      <TableCell align="right">{row.id}</TableCell>
-                      <TableCell align="right">{row.data}</TableCell>
-                      <TableCell align="right">R$ {row.valor}</TableCell>
-                      <TableCell align="right">-</TableCell>
-                    </TableRow>
-                  ))}
-                  {pixRedux.map((row) => (
-                    <TableRow
-                      key={row.id}
-                      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                    >
-                      <TableCell component="th" scope="row">
-                        Pix
+                        {row.type}
                       </TableCell>
                       <TableCell align="right">{row.id}</TableCell>
                       <TableCell align="right">{row.data}</TableCell>

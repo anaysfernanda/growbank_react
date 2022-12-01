@@ -1,12 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { UserType } from "../../types";
 import PixType from "../../types/PixType";
+import { TransactionType } from "../../types/TransactionType";
 
 const initialState: UserType = {
   saldo: 500,
-  saque: [],
-  deposito: [],
-  pix: [],
+  transactions: [],
 };
 
 const CarteiraSlice2 = createSlice({
@@ -16,29 +15,32 @@ const CarteiraSlice2 = createSlice({
     deposito2(state, action: PayloadAction<number>) {
       const data = Date.now();
       state.saldo += action.payload;
-      state.deposito.push({
+      state.transactions.push({
         id: Math.floor(data / 1000),
         data: new Date(data).toDateString(),
         valor: action.payload,
+        type: "Depósito",
       });
     },
     saque2(state, action: PayloadAction<number>) {
       const data = Date.now();
       state.saldo -= action.payload;
-      state.saque.push({
+      state.transactions.push({
         id: Math.floor(data / 1000),
         data: new Date(data).toDateString(),
         valor: action.payload,
+        type: "Saque",
       });
     },
-    pix2(state, action: PayloadAction<PixType>) {
+    pix2(state, action: PayloadAction<TransactionType>) {
       const data = Date.now();
       state.saldo -= action.payload.valor;
-      state.pix.push({
+      state.transactions.push({
         id: Math.floor(data / 1000),
         data: new Date(data).toDateString(),
         valor: action.payload.valor,
         destinatario: action.payload.destinatario,
+        type: "Pix",
       });
     },
   },
