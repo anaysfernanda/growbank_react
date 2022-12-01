@@ -73,10 +73,10 @@ const GrowBank: React.FC = () => {
     setDestination("");
   };
 
-  const handleDelete = () => {
+  const handleDelete = (id: number) => {
     dispatch(
       deleteT({
-        id: 0,
+        id: id,
         valor: 0,
         data: "",
         destinatario: "",
@@ -234,7 +234,7 @@ const GrowBank: React.FC = () => {
                       <TableCell align="right">R$ {row.valor}</TableCell>
                       <TableCell align="right">{row.destinatario}</TableCell>
                       <TableCell align="right">
-                        <IconButton onClick={() => handleDelete()}>
+                        <IconButton onClick={() => handleDelete(row.id)}>
                           <DeleteIcon />
                         </IconButton>
                       </TableCell>
