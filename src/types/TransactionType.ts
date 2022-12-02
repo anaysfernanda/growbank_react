@@ -2,6 +2,6 @@ export interface TransactionType {
   id: number;
   valor: number;
   data: string;
-  type: string;
+  type: "C" | "D";
   destinatario?: string;
 }

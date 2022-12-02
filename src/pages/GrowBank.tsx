@@ -27,20 +27,26 @@ import {
   saque2,
 } from "../store/modules/CarteiraSlice";
 import DeleteIcon from "@mui/icons-material/Delete";
+import {
+  addOneTransaction,
+  selectAllTransactions,
+} from "../store/modules/TransactionsSlice";
+import { useEffect } from "react";
 
 type Actions = "pix" | "saque" | "deposito" | "";
 
 const GrowBank: React.FC = () => {
   const dispatch = useAppDispatch();
-  const transactionsRedux = useAppSelector(
-    (state) => state.carteira2.transactions
-  );
-  const saldoRedux = useAppSelector((state) => state.carteira2.saldo);
   const [selectedAction, setSelectedAction] = useState<Actions>("");
   const [pix, setPix] = useState<string>("");
   const [destination, setDestination] = useState<string>("");
   const [withdraw, setWithdraw] = useState<string>("");
   const [deposit, setDeposit] = useState<string>("");
+  const transactions = useAppSelector(selectAllTransactions);
+
+  useEffect(() => {
+    console.log(transactions);
+  }, [transactions]);
 
   const handleSelect = (action: Actions) => {
     setSelectedAction(action);
@@ -54,7 +60,15 @@ const GrowBank: React.FC = () => {
 
   const handleDeposit = () => {
     let changeDeposit = Number(deposit);
-    dispatch(deposito2(changeDeposit));
+    const id = Math.floor(Date.now() / 1000);
+    dispatch(
+      addOneTransaction({
+        id: id,
+        type: "C",
+        data: new Date().toDateString(),
+        value: changeDeposit,
+      })
+    );
     setDeposit("");
   };
 
@@ -84,7 +98,7 @@ const GrowBank: React.FC = () => {
       })
     );
   };
-  console.log(saldoRedux);
+
   return (
     <React.Fragment>
       <Appbar />
@@ -221,7 +235,7 @@ const GrowBank: React.FC = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {transactionsRedux.map((row) => (
+                  {transactions.map((row) => (
                     <TableRow
                       key={row.id}
                       sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -231,12 +245,12 @@ const GrowBank: React.FC = () => {
                       </TableCell>
                       <TableCell align="right">{row.id}</TableCell>
                       <TableCell align="right">{row.data}</TableCell>
-                      <TableCell align="right">R$ {row.valor}</TableCell>
+                      <TableCell align="right">R$ {row.value}</TableCell>
                       <TableCell align="right">{row.destinatario}</TableCell>
                       <TableCell align="right">
                         <IconButton
                           onClick={() =>
-                            handleDelete(row.id, row.type, row.valor)
+                            handleDelete(row.id, row.type, row.value)
                           }
                         >
                           <DeleteIcon />
