@@ -73,18 +73,18 @@ const GrowBank: React.FC = () => {
     setDestination("");
   };
 
-  const handleDelete = (id: number) => {
+  const handleDelete = (id: number, type: string, valor: number) => {
     dispatch(
       deleteT({
         id: id,
-        valor: 0,
+        valor: valor,
         data: "",
         destinatario: "",
-        type: "",
+        type: type,
       })
     );
   };
-
+  console.log(saldoRedux);
   return (
     <React.Fragment>
       <Appbar />
@@ -234,7 +234,11 @@ const GrowBank: React.FC = () => {
                       <TableCell align="right">R$ {row.valor}</TableCell>
                       <TableCell align="right">{row.destinatario}</TableCell>
                       <TableCell align="right">
-                        <IconButton onClick={() => handleDelete(row.id)}>
+                        <IconButton
+                          onClick={() =>
+                            handleDelete(row.id, row.type, row.valor)
+                          }
+                        >
                           <DeleteIcon />
                         </IconButton>
                       </TableCell>

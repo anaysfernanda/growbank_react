@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { UserType } from "../../types";
-import PixType from "../../types/PixType";
 import { TransactionType } from "../../types/TransactionType";
 
 const initialState: UserType = {
@@ -47,9 +46,13 @@ const CarteiraSlice2 = createSlice({
       const index = state.transactions.findIndex(
         (item) => item.id === action.payload.id
       );
-      if (index >= 0) {
-        state.transactions.splice(index, 1);
+      if (action.payload.type === "Pix" || action.payload.type === "Saque") {
+        state.saldo += action.payload.valor;
+        if (index >= 0) {
+          state.transactions.splice(index, 1);
+        }
       }
+      state.saldo -= action.payload.valor;
       return state;
     },
   },
